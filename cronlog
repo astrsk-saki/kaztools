@@ -10,6 +10,7 @@ use Pod::Usage;
 
 our $VERSION = '0.01';
 
+my $mailto = $ENV{MAILTO};
 my ($logfile, $opt_timestamp, $opt_print_always, $opt_help, $opt_version);
 GetOptions(
     'logfile=s' => \$logfile,
@@ -97,6 +98,10 @@ if ($exit_code != 0 || $opt_print_always) {
         print @l;
     }
     close $fh;
+    
+    if ($mailto){
+        system("cat $logfile | mail -s 'alert message' $mailto");
+    }
 }
 
 exit($exit_code >> 8);
